@@ -1,0 +1,37 @@
+model User {
+  id            String   @id @default(uuid())
+  name          String
+  email         String   @unique
+  password      String
+  profileImage  String?
+  bio           String?
+  role          Role     @default(USER)
+  createdAt     DateTime @default(now())
+  entries       GiveawayEntry[]
+}
+
+model Giveaway {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  image       String
+  startDate   DateTime
+  endDate     DateTime
+  isActive    Boolean  @default(true)
+  entries     GiveawayEntry[]
+}
+
+model GiveawayEntry {
+  id         String   @id @default(uuid())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+  giveaway   Giveaway @relation(fields: [giveawayId], references: [id])
+  giveawayId String
+  createdAt  DateTime @default(now())
+  isWinner   Boolean  @default(false)
+}
+
+enum Role {
+  USER
+  ADMIN
+}
